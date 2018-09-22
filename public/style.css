@@ -12,6 +12,8 @@
 @import "codemirror/theme/material.css";
 @import "codemirror/theme/midnight.css";
 @import "codemirror/theme/solarized.css";
+@import "codemirror/addon/lint/lint.css";
+
 body {
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -19,7 +21,11 @@ body {
     margin: 0;
     padding: 0;
 }
-
+.codeShareMain {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
 .codemirrordiv {
     margin-left: auto;
     margin-right: auto;

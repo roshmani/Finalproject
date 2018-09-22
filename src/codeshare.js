@@ -17,11 +17,9 @@ export default class CodeShare extends React.Component {
                 <div className="onlineUsers">
                     <OnlineUsers />
                 </div>
-                <div className="codeeditor">
-                    <Link to={`/sharecode/${this.props.id}`}>
-                        <h2>Start Coding Together</h2>
-                    </Link>
-                </div>
+                <Link to={`/sharecode/${this.props.id}`}>
+                    <h2>Start Coding Together</h2>
+                </Link>
             </div>
         );
     }

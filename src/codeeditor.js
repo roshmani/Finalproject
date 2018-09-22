@@ -2,37 +2,39 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 /*************************code mirror headers*******************************************************/
 import Codemirror from "react-codemirror";
-require("codemirror/lib/codemirror");
-require("codemirror/mode/javascript/javascript");
-require("codemirror/mode/xml/xml");
-require("codemirror/mode/markdown/markdown");
-require("codemirror/mode/ruby/ruby");
-require("codemirror/mode/swift/swift");
-require("codemirror/mode/clojure/clojure");
-require("codemirror/mode/python/python");
-require("codemirror/mode/php/php");
-require("codemirror/mode/erlang/erlang");
-require("codemirror/mode/coffeescript/coffeescript");
-require("codemirror/mode/crystal/crystal");
+import "codemirror/lib/codemirror";
+import "codemirror/addon/lint/javascript-lint";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/xml/xml";
+import "codemirror/mode/markdown/markdown";
+import "codemirror/mode/ruby/ruby";
+import "codemirror/mode/swift/swift";
+import "codemirror/mode/clojure/clojure";
+import "codemirror/mode/python/python";
+import "codemirror/mode/php/php";
+import "codemirror/mode/erlang/erlang";
+import "codemirror/mode/coffeescript/coffeescript";
+import "codemirror/mode/crystal/crystal";
+
 /***********************************************************************************************************/
 export default class CodeEditor extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            codeState: "",
-            currentlyTyping: null,
-            readOnly: false
+        let defaults = {
+            javascript: 'var component = {\n\tname: "Code-Together"\n};'
         };
+        this.state = {
+            codeState: defaults.javascript,
+            currentlyTyping: null,
+            readOnly: false,
+            mode: "javascript"
+        };
+
         this.updateCode = this.updateCode.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.toggleReadOnly = this.toggleReadOnly.bind(this);
     }
-    componentDidMount() {
-        /*this.editor = Codemirror(this.editor, {
-            value: "function myScript(){return 100;}\n",
-            mode: "javascript"
-        });*/
-    }
+
     updateCode(newCode) {
         this.setState({
             codeState: newCode
@@ -41,8 +43,8 @@ export default class CodeEditor extends Component {
     changeMode(e) {
         var mode = e.target.value;
         this.setState({
-            mode: mode,
-            codeState: ""
+            mode: this.state.mode,
+            codeState: this.defaults[mode]
         });
     }
     toggleReadOnly() {
@@ -58,7 +60,11 @@ export default class CodeEditor extends Component {
             lineNumbers: true,
             theme: "monokai",
             readOnly: this.state.readOnly,
-            mode: this.state.mode
+            mode: this.state.mode,
+            gutters: ["CodeMirror-lint-markers"],
+            lint: true,
+            indentWithTabs: true,
+            indentUnit: 4
         };
         return (
             <div className="codemirrordiv">
