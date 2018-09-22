@@ -46,11 +46,7 @@ export default class App extends React.Component {
                             </div>
                             <Navigation />
                         </div>
-                        <Route
-                            exact
-                            path="/sharecode/:userId"
-                            component={CodeShare}
-                        />
+                        <Route exact path="/sharecode" component={CodeShare} />
                     </div>
                 </div>
             </BrowserRouter>

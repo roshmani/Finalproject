@@ -7,7 +7,7 @@ export default function Navigation() {
             <div className="nav">
                 <ul className="navbar">
                     <li>
-                        <Link to="/sharecode/:userId">Start Coding</Link>
+                        <Link to="/sharecode">Start Coding</Link>
                     </li>
                     <li>
                         <a href="/logout">Logout</a>
