@@ -4,7 +4,12 @@ const compression = require("compression");
 const server = require("http").Server(app);
 const io = require("socket.io")(server, { origins: "localhost:8080" });
 const { hashPass, checkPass } = require("./PwdEncryption");
-const { regUsers, checkEmail, getUserDetails } = require("./codetogetherdb");
+const {
+    regUsers,
+    checkEmail,
+    getUserDetails,
+    getUsersByIds
+} = require("./codetogetherdb");
 app.use(compression());
 const { secret } = require("./secrets.json");
 const csurf = require("csurf");
@@ -36,7 +41,19 @@ if (process.env.NODE_ENV != "production") {
 } else {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
+app.use(express.static("./public"));
 
+app.get("/logout", function(request, response) {
+    request.session = null;
+    response.redirect("/welcome");
+});
+
+app.get("/Welcome", function(req, res) {
+    if (req.session.userId) {
+        return res.redirect("/");
+    }
+    res.sendFile(__dirname + "/index.html");
+});
 /*******************************************************************************************/
 /*                                   get user details                                     */
 /******************************************************************************************/
@@ -138,8 +155,33 @@ io.on("connection", function(socket) {
     onlineUsers[socketId] = userId;
 
     let arrayOfuserIds = Object.values(onlineUsers);
+    getUsersByIds(arrayOfuserIds)
+        .then(({ rows }) => {
+            socket.emit("onlineUsers", rows);
+        })
+        .catch(function(err) {
+            console.log("Error occured in getting users by ids:", err);
+        });
+
+    if (Object.values(onlineUsers).filter(id => id == userId).length == 1) {
+        /* or use ---if(arrayOfuserIds.indexOf(userId)==arrayOfuserIds.length - 1){*/
+        getUserDetails(userId)
+            .then(({ rows }) => {
+                socket.broadcast.emit("userJoined", rows[0]);
+            })
+            .catch(function(err) {
+                console.log(
+                    "Error occured in getting last joined user details",
+                    err
+                );
+            });
+    }
 
     socket.on("disconnect", () => {
-        console.log("user left!");
+        delete onlineUsers[socket.id];
+        //check if the users are in  object.values(userid ) then emit
+        if (!Object.values(onlineUsers).includes(userId)) {
+            socket.broadcast.emit("userLeft", userId);
+        }
     });
 });

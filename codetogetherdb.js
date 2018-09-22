@@ -24,3 +24,8 @@ module.exports.getUserDetails = function(userid) {
     var query = `SELECT * FROM users WHERE id=$1`;
     return db.query(query, [userid]);
 };
+
+module.exports.getUsersByIds = function(arrayOfIds) {
+    const query = `SELECT * FROM users WHERE id = ANY($1)`;
+    return db.query(query, [arrayOfIds]);
+};

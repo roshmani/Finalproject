@@ -1,0 +1,32 @@
+@import "codemirror/lib/codemirror.css";
+@import "codemirror/theme/monokai.css";
+@import "codemirror/theme/bespin.css";
+@import "codemirror/theme/3024-day.css";
+@import "codemirror/theme/3024-night.css";
+@import "codemirror/theme/cobalt.css";
+@import "codemirror/theme/eclipse.css";
+@import "codemirror/theme/dracula.css";
+@import "codemirror/theme/isotope.css";
+@import "codemirror/theme/duotone-light.css";
+@import "codemirror/theme/icecoder.css";
+@import "codemirror/theme/material.css";
+@import "codemirror/theme/midnight.css";
+@import "codemirror/theme/solarized.css";
+body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.codemirrordiv {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 720px;
+    padding: 1em;
+}
+
+.ReactCodeMirror {
+    border: 1px solid #ccc;
+}

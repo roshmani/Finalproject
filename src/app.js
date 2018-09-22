@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import axios from "./axios";
-import Navigation from "./navigation.js";
+import Navigation from "./navigation";
 import CodeShare from "./codeshare";
+import CodeEditor from "./codeeditor";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -30,7 +31,7 @@ export default class App extends React.Component {
         if (!this.state.id) {
             return <div>Loading...</div>;
         }
-        const { fname, lname } = this.state;
+        const { fname, lname, id } = this.state;
         return (
             <BrowserRouter>
                 <div>
@@ -46,7 +47,17 @@ export default class App extends React.Component {
                             </div>
                             <Navigation />
                         </div>
-                        <Route exact path="/sharecode" component={CodeShare} />
+                        <div className="codesharewrapper">
+                            <Route
+                                exact
+                                path="/sharecode"
+                                render={() => <CodeShare id={id} />}
+                            />
+                            <Route
+                                path="/sharecode/:id"
+                                component={CodeEditor}
+                            />
+                        </div>
                     </div>
                 </div>
             </BrowserRouter>
