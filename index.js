@@ -89,8 +89,10 @@ app.post("/register", (req, res) => {
                     hashedpwd
                 );
             })
-            .then(function(userid) {
-                req.session.userId = userid.rows[0].id;
+            .then(function(results) {
+                req.session.userId = results.rows[0].id;
+                req.session.user =
+                    results.rows[0].fname + "" + results.rows[0].lname;
                 res.json({ success: true });
             })
             .catch(function(err) {
@@ -155,6 +157,17 @@ io.on("connection", function(socket) {
     onlineUsers[socketId] = userId;
 
     let arrayOfuserIds = Object.values(onlineUsers);
+    /*************************************Join a Room***************************************************/
+
+    socket.on("room", data => {
+        console.log("in joining room in SERVER");
+        console.log("room data", data);
+        socket.join(data.room, () => {
+            let rooms = Object.keys(socket.rooms);
+            console.log(rooms); // [ <socket.id>, 'room 237' ]
+        });
+    });
+    /****************************************************************************************************/
     getUsersByIds(arrayOfuserIds)
         .then(({ rows }) => {
             socket.emit("onlineUsers", rows);

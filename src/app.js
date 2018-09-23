@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import axios from "./axios";
 import Navigation from "./navigation";
-import CodeShare from "./codeshare";
 import CodeEditor from "./codeeditor";
+import CodeShare from "./codeshare";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -51,9 +51,16 @@ export default class App extends React.Component {
                             <Route
                                 exact
                                 path="/sharecode"
-                                render={() => <CodeShare id={id} />}
+                                render={() => (
+                                    <CodeShare
+                                        id={id}
+                                        fname={fname}
+                                        lname={lname}
+                                    />
+                                )}
                             />
                             <Route
+                                exact
                                 path="/sharecode/:id"
                                 component={CodeEditor}
                             />

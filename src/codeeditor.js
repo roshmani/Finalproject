@@ -15,7 +15,8 @@ import "codemirror/mode/php/php";
 import "codemirror/mode/erlang/erlang";
 import "codemirror/mode/coffeescript/coffeescript";
 import "codemirror/mode/crystal/crystal";
-
+import { emit } from "./socket";
+import RoomUsers from "./roomusers";
 /***********************************************************************************************************/
 export default class CodeEditor extends Component {
     constructor(props) {
@@ -24,27 +25,50 @@ export default class CodeEditor extends Component {
             javascript: 'var component = {\n\tname: "Code-Together"\n};'
         };
         this.state = {
-            codeState: defaults.javascript,
+            code: defaults.javascript,
             currentlyTyping: null,
             readOnly: false,
             mode: "javascript"
         };
-
         this.updateCode = this.updateCode.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.toggleReadOnly = this.toggleReadOnly.bind(this);
     }
+    componentDidMount() {
+        emit("room", { room: this.props.match.params.id });
+        this.setState({ otherUserId: this.props.match.params.id });
+    }
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.otherUserId != nextProps.match.params.id) {
+            return {
+                theId: nextProps.match.params.id
+            };
+        }
+        return null;
+    }
+    componentDidUpdate() {
+        if (this.state.theId) {
+            emit("room", { room: this.state.theId });
+            this.setState({ otherUserId: this.state.theId, theId: null });
+        }
+    }
+    componentWillUnmount() {
+        emit("leaveRoom", {
+            room: this.props.match.params.id
+        });
+    }
 
     updateCode(newCode) {
+        console.log("test code change:", newCode);
         this.setState({
-            codeState: newCode
+            code: newCode
         });
     }
     changeMode(e) {
         var mode = e.target.value;
         this.setState({
             mode: this.state.mode,
-            codeState: this.defaults[mode]
+            code: this.defaults[mode]
         });
     }
     toggleReadOnly() {
@@ -58,7 +82,7 @@ export default class CodeEditor extends Component {
     render() {
         let options = {
             lineNumbers: true,
-            theme: "monokai",
+            theme: "3024-night",
             readOnly: this.state.readOnly,
             mode: this.state.mode,
             gutters: ["CodeMirror-lint-markers"],
@@ -67,32 +91,38 @@ export default class CodeEditor extends Component {
             indentUnit: 4
         };
         return (
-            <div className="codemirrordiv">
-                <Codemirror
-                    ref={editor => (this.editor = editor)}
-                    value={this.state.codeState}
-                    onChange={this.updateCode}
-                    options={options}
-                    autoFocus={true}
-                />
+            <div className="codeRoom">
+                <div className="codemirrordiv">
+                    <Codemirror
+                        ref={editor => (this.editor = editor)}
+                        value={this.state.code}
+                        onChange={this.updateCode}
+                        options={options}
+                        autoFocus={true}
+                    />
 
-                <div style={{ marginTop: 10 }}>
-                    <select onChange={this.changeMode} value={this.state.mode}>
-                        <option value="markdown">Markdown</option>
-                        <option value="javascript">JavaScript</option>
-                    </select>
-                    <button onClick={this.toggleReadOnly}>
-                        Toggle read-only mode (currently{" "}
-                        {this.state.readOnly ? "on" : "off"})
-                    </button>
+                    <div style={{ marginTop: 10 }}>
+                        <select
+                            onChange={this.changeMode}
+                            value={this.state.mode}
+                        >
+                            <option value="markdown">Markdown</option>
+                            <option value="javascript">JavaScript</option>
+                        </select>
+                        <button onClick={this.toggleReadOnly}>
+                            Toggle read-only mode (currently{" "}
+                            {this.state.readOnly ? "on" : "off"})
+                        </button>
+                    </div>
                 </div>
+                <RoomUsers />
             </div>
         );
     }
 }
 /*const mapCodetoProps = state => {
     return {
-        codeState: state.codeState
+        code: state.code
     };
 };
 
