@@ -9,15 +9,17 @@ export default function Welcome() {
     return (
         <HashRouter>
             <div className="landingpagediv">
-                <div className="logobrand">
-                    <h1 className="logotxt">Code Together</h1>
-                </div>
-                <div className="welcomediv">
+                <div className="headerbtndiv">
+                    <div className="logobrand">
+                        <h1 className="logotxt">&lt;Code Together/&gt;</h1>
+                    </div>
                     <div className="signinbtndiv">
                         <Link to="/login">
                             <p className="signinbtn">Sign In</p>
                         </Link>
                     </div>
+                </div>
+                <div className="welcomediv">
                     <div className="componentdiv">
                         <Route exact path="/" component={LandingPage} />
                         <Route

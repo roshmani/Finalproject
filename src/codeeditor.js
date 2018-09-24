@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 /*************************code mirror headers*******************************************************/
-import Codemirror from "react-codemirror";
+import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror";
 import "codemirror/addon/lint/javascript-lint";
 import "codemirror/mode/javascript/javascript";
@@ -46,7 +46,6 @@ class CodeEditor extends Component {
             mode: "javascript"
         };
         this.updateCode = this.updateCode.bind(this);
-        this.getCursorPosition = this.getCursorPosition.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.toggleReadOnly = this.toggleReadOnly.bind(this);
     }
@@ -56,9 +55,6 @@ class CodeEditor extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        editor && editor.codeMirror.setValue(nextProps.code);
-        editor && editor.codeMirror.setCursor(100);
-        console.log("Editor:", editor && editor.codeMirror);
         if (prevState.otherUserId != nextProps.match.params.id) {
             return {
                 theId: nextProps.match.params.id
@@ -78,10 +74,9 @@ class CodeEditor extends Component {
             room: this.props.match.params.id
         });
     }
-    /*getCursorPosition(e) {
-        let pos = e.doc.getCursor().ch;
-    }*/
-    updateCode(newCode) {
+
+    updateCode(editor, data, newCode) {
+        console.log("code in update:", newCode);
         emit("codeUpdate", {
             code: newCode,
             room: this.props.match.params.id
@@ -122,14 +117,16 @@ class CodeEditor extends Component {
         return (
             <div className="codeRoom">
                 <div className="codemirrordiv">
-                    <Codemirror
+                    <CodeMirror
                         ref={e => (editor = e)}
                         value={this.props.code}
-                        onChange={this.updateCode}
+                        onBeforeChange={this.updateCode}
+                        onChange={(editor, value) => {
+                            console.log("changed value", { value });
+                        }}
                         options={options}
                         autoFocus={true}
                         cursor={this.state.currentPosition}
-                        onCursorActivity={this.getCursorPosition}
                     />
 
                     <div style={{ marginTop: 10 }}>
