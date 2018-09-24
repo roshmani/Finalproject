@@ -8,6 +8,7 @@ class RoomUsers extends Component {
     }
 
     render() {
+        console.log("users:", this.props.users);
         if (!this.props.users) {
             return null;
         }
@@ -17,7 +18,7 @@ class RoomUsers extends Component {
                     <h3>Users Coding Together</h3>
                     {this.props.users.map(user => (
                         <div className="roomuser" key={user.id}>
-                            {user.user}
+                            {user.fname} {user.lname}
                         </div>
                     ))}
                 </div>

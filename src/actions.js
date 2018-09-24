@@ -1,7 +1,7 @@
-export function onlineUsers(onlineUsers) {
+export function roomUsers(users) {
     return {
-        type: "ONLINE_USERS",
-        onlineUsers
+        type: "ROOM_USERS",
+        users
     };
 }
 export function userJoined(joinedUser) {

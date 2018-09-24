@@ -51,13 +51,7 @@ export default class App extends React.Component {
                             <Route
                                 exact
                                 path="/sharecode"
-                                render={() => (
-                                    <CodeShare
-                                        id={id}
-                                        fname={fname}
-                                        lname={lname}
-                                    />
-                                )}
+                                render={() => <CodeShare id={id} />}
                             />
                             <Route
                                 exact

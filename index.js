@@ -157,44 +157,58 @@ io.on("connection", function(socket) {
     onlineUsers[socketId] = userId;
 
     let arrayOfuserIds = Object.values(onlineUsers);
+    let roomUsers = [];
     /*************************************Join a Room***************************************************/
 
     socket.on("room", data => {
+        console.log("users online", onlineUsers);
         console.log("in joining room in SERVER");
         console.log("room data", data);
         socket.join(data.room, () => {
             let rooms = Object.keys(socket.rooms);
-            console.log(rooms); // [ <socket.id>, 'room 237' ]
+            console.log("room:", rooms); // [ <socket.id>, 'room 237' ]
+            let roomClients = io.sockets.adapter.rooms[data.room].sockets;
+            let userRoom = Object.keys(roomClients);
+            roomUsers = Object.keys(onlineUsers)
+                .filter(key => userRoom.includes(key))
+                .reduce((obj, key) => {
+                    obj[key] = onlineUsers[key];
+                    return obj;
+                }, {});
+            console.log("filtered:", roomUsers);
         });
-    });
-    /****************************************************************************************************/
-    getUsersByIds(arrayOfuserIds)
-        .then(({ rows }) => {
-            socket.emit("onlineUsers", rows);
-        })
-        .catch(function(err) {
-            console.log("Error occured in getting users by ids:", err);
-        });
+        /****************************************************************************************************/
+        let arrayRoomUserIds = Object.values(roomUsers);
 
-    if (Object.values(onlineUsers).filter(id => id == userId).length == 1) {
-        /* or use ---if(arrayOfuserIds.indexOf(userId)==arrayOfuserIds.length - 1){*/
-        getUserDetails(userId)
+        getUsersByIds(arrayRoomUserIds)
             .then(({ rows }) => {
-                socket.broadcast.emit("userJoined", rows[0]);
+                socket.emit("roomUsers", rows);
             })
             .catch(function(err) {
-                console.log(
-                    "Error occured in getting last joined user details",
-                    err
-                );
+                console.log("Error occured in getting room users by ids:", err);
             });
-    }
-
-    socket.on("disconnect", () => {
-        delete onlineUsers[socket.id];
-        //check if the users are in  object.values(userid ) then emit
-        if (!Object.values(onlineUsers).includes(userId)) {
-            socket.broadcast.emit("userLeft", userId);
+        /************************************************************user joined*******************************/
+        if (Object.values(roomUsers).filter(id => id == userId).length == 1) {
+            /* or use ---if(arrayOfuserIds.indexOf(userId)==arrayOfuserIds.length - 1){*/
+            getUserDetails(userId)
+                .then(({ rows }) => {
+                    socket.broadcast.to(data.room).emit("userJoined", rows[0]);
+                })
+                .catch(function(err) {
+                    console.log(
+                        "Error occured in getting last joined user in room details",
+                        err
+                    );
+                });
         }
     });
+
+    socket.on("leaveRoom", data => {
+        delete roomUsers[socket.id];
+        //check if the users are in  object.values(userid ) then emit
+        if (!Object.values(roomUsers).includes(userId)) {
+            socket.broadcast.to(data.room).emit("userLeft", userId);
+        }
+    });
+    socket.on("disconnect", () => {});
 });
