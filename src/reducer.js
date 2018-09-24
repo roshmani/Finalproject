@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
-    users: []
+    users: [],
+    code: ""
 };
 
 export function reducer(state = INITIAL_STATE, action) {
@@ -18,6 +19,10 @@ export function reducer(state = INITIAL_STATE, action) {
             ...state,
             users: state.users.filter(user => user.id != action.leftUserId)
         };
+    }
+
+    if (action.type == "UPDATE_CODE") {
+        state = { ...state, code: action.code };
     }
     return state;
 }

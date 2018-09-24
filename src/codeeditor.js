@@ -34,19 +34,19 @@ import "codemirror/addon/lint/lint.css";
 import { emit } from "./socket";
 import RoomUsers from "./roomusers";
 /***********************************************************************************************************/
-export default class CodeEditor extends Component {
+let editor;
+class CodeEditor extends Component {
     constructor(props) {
         super(props);
-        let defaults = {
-            javascript: 'var component = {\n\tname: "Code-Together"\n};'
-        };
+
         this.state = {
-            code: defaults.javascript,
+            code: "",
             currentlyTyping: null,
             readOnly: false,
             mode: "javascript"
         };
         this.updateCode = this.updateCode.bind(this);
+        this.getCursorPosition = this.getCursorPosition.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.toggleReadOnly = this.toggleReadOnly.bind(this);
     }
@@ -54,7 +54,11 @@ export default class CodeEditor extends Component {
         emit("room", { room: this.props.match.params.id });
         this.setState({ otherUserId: this.props.match.params.id });
     }
+
     static getDerivedStateFromProps(nextProps, prevState) {
+        editor && editor.codeMirror.setValue(nextProps.code);
+        editor && editor.codeMirror.setCursor(100);
+        console.log("Editor:", editor && editor.codeMirror);
         if (prevState.otherUserId != nextProps.match.params.id) {
             return {
                 theId: nextProps.match.params.id
@@ -63,6 +67,7 @@ export default class CodeEditor extends Component {
         return null;
     }
     componentDidUpdate() {
+        console.log("code in componentDidUpdate", this.props.code);
         if (this.state.theId) {
             emit("room", { room: this.state.theId });
             this.setState({ otherUserId: this.state.theId, theId: null });
@@ -73,13 +78,18 @@ export default class CodeEditor extends Component {
             room: this.props.match.params.id
         });
     }
-
+    /*getCursorPosition(e) {
+        let pos = e.doc.getCursor().ch;
+    }*/
     updateCode(newCode) {
-        console.log("test code change:", newCode);
-        this.setState({
-            code: newCode
+        emit("codeUpdate", {
+            code: newCode,
+            room: this.props.match.params.id
         });
     }
+
+    updateCurrentlyTyping() {}
+
     changeMode(e) {
         var mode = e.target.value;
         this.setState({
@@ -106,15 +116,20 @@ export default class CodeEditor extends Component {
             indentWithTabs: true,
             indentUnit: 4
         };
+        /*if (!this.props.code) {
+            return null;
+        }*/
         return (
             <div className="codeRoom">
                 <div className="codemirrordiv">
                     <Codemirror
-                        ref={editor => (this.editor = editor)}
-                        value={this.state.code}
+                        ref={e => (editor = e)}
+                        value={this.props.code}
                         onChange={this.updateCode}
                         options={options}
                         autoFocus={true}
+                        cursor={this.state.currentPosition}
+                        onCursorActivity={this.getCursorPosition}
                     />
 
                     <div style={{ marginTop: 10 }}>
@@ -136,10 +151,10 @@ export default class CodeEditor extends Component {
         );
     }
 }
-/*const mapCodetoProps = state => {
+const mapCodetoProps = state => {
     return {
         code: state.code
     };
 };
 
-export default connect(mapCodetoProps)(CodeEditor);*/
+export default connect(mapCodetoProps)(CodeEditor);

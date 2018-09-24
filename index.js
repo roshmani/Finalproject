@@ -175,14 +175,13 @@ io.on("connection", function(socket) {
                     obj[key] = onlineUsers[key];
                     return obj;
                 }, {});
-            console.log("filtered:", roomUsers);
         });
         /****************************************************************************************************/
         let arrayRoomUserIds = Object.values(roomUsers);
 
         getUsersByIds(arrayRoomUserIds)
             .then(({ rows }) => {
-                socket.emit("roomUsers", rows);
+                io.to(data.room).emit("loadUsers", rows);
             })
             .catch(function(err) {
                 console.log("Error occured in getting room users by ids:", err);
@@ -192,7 +191,7 @@ io.on("connection", function(socket) {
             /* or use ---if(arrayOfuserIds.indexOf(userId)==arrayOfuserIds.length - 1){*/
             getUserDetails(userId)
                 .then(({ rows }) => {
-                    socket.broadcast.to(data.room).emit("userJoined", rows[0]);
+                    io.to(data.room).emit("userJoined", rows[0]);
                 })
                 .catch(function(err) {
                     console.log(
@@ -201,14 +200,23 @@ io.on("connection", function(socket) {
                     );
                 });
         }
+        /**********************update Code**************************************/
+        socket.on("codeUpdate", payload => {
+            console.log("room for code", data.room);
+
+            io.to(data.room).emit("updateCode", {
+                code: payload.code
+            });
+        });
     });
 
     socket.on("leaveRoom", data => {
         delete roomUsers[socket.id];
         //check if the users are in  object.values(userid ) then emit
         if (!Object.values(roomUsers).includes(userId)) {
-            socket.broadcast.to(data.room).emit("userLeft", userId);
+            io.to(data.room).emit("userLeft", userId);
         }
     });
+
     socket.on("disconnect", () => {});
 });
