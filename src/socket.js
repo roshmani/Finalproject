@@ -1,5 +1,12 @@
 import * as io from "socket.io-client";
-import { loadUsers, userJoined, userLeft, updateCode } from "./actions";
+import {
+    loadUsers,
+    userJoined,
+    userLeft,
+    updateCode,
+    chatMessage,
+    chatMessages
+} from "./actions";
 
 let socket;
 export function getSocket(store) {
@@ -19,6 +26,14 @@ export function getSocket(store) {
         socket.on("updateCode", code => {
             console.log("in socket js", code);
             store.dispatch(updateCode(code));
+        });
+        socket.on("chatMessage", message => {
+            store.dispatch(chatMessage(message));
+        });
+
+        socket.on("chatMessages", messages => {
+            console.log("messages in socket.js");
+            store.dispatch(chatMessages(messages));
         });
     }
     return socket;

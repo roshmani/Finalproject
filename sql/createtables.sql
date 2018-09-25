@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS codestore;
+DROP TABLE IF EXISTS chats;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -13,4 +14,11 @@ CREATE TABLE codestore (
     id SERIAL primary key,
     coder_id INTEGER NOT NULL REFERENCES users(id),
     codetext VARCHAR not null
+);
+
+CREATE TABLE chats(
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER NOT NULL REFERENCES users(id),
+    send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message VARCHAR(1000) not null
 );

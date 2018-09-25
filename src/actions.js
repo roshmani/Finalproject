@@ -24,3 +24,17 @@ export function updateCode(code) {
         code: code.code
     };
 }
+
+export function chatMessages(messages) {
+    return {
+        type: "CHAT_MESSAGES",
+        messages
+    };
+}
+
+export function chatMessage(message) {
+    return {
+        type: "CHAT_MESSAGE",
+        message
+    };
+}

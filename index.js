@@ -8,7 +8,9 @@ const {
     regUsers,
     checkEmail,
     getUserDetails,
-    getUsersByIds
+    getUsersByIds,
+    getRecentMessages,
+    saveChatMsg
 } = require("./codetogetherdb");
 app.use(compression());
 const { secret } = require("./secrets.json");
@@ -105,13 +107,14 @@ app.post("/register", (req, res) => {
 });
 /******************************Login*******************************************************/
 app.post("/login", (req, res) => {
-    let idval, fname;
+    let idval, fname, lname;
     if (req.body.emailid && req.body.password) {
         checkEmail(req.body.emailid)
             .then(function(results) {
                 if (results.rows.length > 0) {
                     idval = results.rows[0].id;
                     fname = results.rows[0].fname;
+                    lname = results.rows[0].lname;
                     return checkPass(
                         req.body.password,
                         results.rows[0].password
@@ -123,6 +126,7 @@ app.post("/login", (req, res) => {
             .then(function(match) {
                 if (match) {
                     req.session.userId = idval;
+                    req.session.user = fname + " " + lname;
                     res.json({ success: true, username: fname });
                 } else {
                     throw new Error();
@@ -163,7 +167,6 @@ io.on("connection", function(socket) {
     socket.on("room", data => {
         console.log("users online", onlineUsers);
         console.log("in joining room in SERVER");
-        console.log("room data", data);
         socket.join(data.room, () => {
             let rooms = Object.keys(socket.rooms);
             console.log("room:", rooms); // [ <socket.id>, 'room 237' ]
@@ -207,6 +210,41 @@ io.on("connection", function(socket) {
             io.to(data.room).emit("updateCode", {
                 code: payload.code
             });
+        });
+
+        /************************************************************************/
+        getRecentMessages()
+            .then(({ rows }) => {
+                io.to(data.room).emit("chatMessages", rows.reverse());
+            })
+            .catch(function(err) {
+                console.log("Error occured in getting chat messages", err);
+            });
+
+        /************************************************************************/
+
+        socket.on("chat", message => {
+            saveChatMsg(userId, message)
+                .then(({ rows }) => {
+                    let userdet = Object.assign(rows[0]);
+                    getUserDetails(userId)
+                        .then(({ rows }) => {
+                            console.log("userdet:", userdet);
+                            io.to(data.room).emit(
+                                "chatMessage",
+                                Object.assign({}, userdet, rows[0])
+                            );
+                        })
+                        .catch(function(err) {
+                            console.log(
+                                "Error occured in getting user details for chat",
+                                err
+                            );
+                        });
+                })
+                .catch(function(err) {
+                    console.log("Error occured in getting chat message", err);
+                });
         });
     });
 

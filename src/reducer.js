@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
     users: [],
-    code: ""
+    code: "",
+    messages: []
 };
 
 export function reducer(state = INITIAL_STATE, action) {
@@ -24,5 +25,14 @@ export function reducer(state = INITIAL_STATE, action) {
     if (action.type == "UPDATE_CODE") {
         state = { ...state, code: action.code };
     }
+
+    if (action.type == "CHAT_MESSAGES") {
+        state = { ...state, messages: action.messages };
+    }
+
+    if (action.type == "CHAT_MESSAGE") {
+        state = { ...state, messages: [...state.messages, action.message] };
+    }
+
     return state;
 }

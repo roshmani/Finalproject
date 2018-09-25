@@ -33,6 +33,7 @@ import "codemirror/theme/solarized.css";
 import "codemirror/addon/lint/lint.css";
 import { emit } from "./socket";
 import RoomUsers from "./roomusers";
+import Chat from "./chat";
 /***********************************************************************************************************/
 let editor;
 class CodeEditor extends Component {
@@ -87,9 +88,11 @@ class CodeEditor extends Component {
 
     changeMode(e) {
         var mode = e.target.value;
+        console.log("Mode changed", mode);
         this.setState({
-            mode: this.state.mode,
-            code: this.defaults[mode]
+            mode: e.target.value,
+            code:
+                "/*Start Programming---Please change comment to required syntax*/"
         });
     }
     toggleReadOnly() {
@@ -136,6 +139,13 @@ class CodeEditor extends Component {
                         >
                             <option value="markdown">Markdown</option>
                             <option value="javascript">JavaScript</option>
+                            <option value="ruby">Ruby</option>
+                            <option value="clojure">Clojure</option>
+                            <option value="crystal">Crystal</option>
+                            <option value="erlang">Erlang</option>
+                            <option value="php">PHP</option>
+                            <option value="python">Python</option>
+                            <option value="swift">Swift</option>
                         </select>
                         <button onClick={this.toggleReadOnly}>
                             Toggle read-only mode (currently{" "}
@@ -143,7 +153,10 @@ class CodeEditor extends Component {
                         </button>
                     </div>
                 </div>
-                <RoomUsers />
+                <div className="roomChatdiv">
+                    <RoomUsers />
+                    <Chat />
+                </div>
             </div>
         );
     }
