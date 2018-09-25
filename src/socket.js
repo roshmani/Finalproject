@@ -24,7 +24,6 @@ export function getSocket(store) {
             store.dispatch(userLeft(leftUserId));
         });
         socket.on("updateCode", code => {
-            console.log("in socket js", code);
             store.dispatch(updateCode(code));
         });
         socket.on("chatMessage", message => {

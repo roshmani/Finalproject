@@ -12,12 +12,14 @@ CREATE TABLE users (
 
 CREATE TABLE codestore (
     id SERIAL primary key,
-    coder_id INTEGER NOT NULL REFERENCES users(id),
-    codetext VARCHAR not null
+    coder_id INTEGER NOT NULL REFERENCES users(id) UNIQUE,
+    codetext VARCHAR not null,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chats(
     id SERIAL PRIMARY KEY,
+    room_id INTEGER NOT NULL,
     sender_id INTEGER NOT NULL REFERENCES users(id),
     send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message VARCHAR(1000) not null

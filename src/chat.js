@@ -12,7 +12,8 @@ class Chat extends Component {
 
     savechatMessage(e) {
         if (e.which === 13) {
-            emit("chat", e.target.value);
+            console.log("emitting chat", this.props.room);
+            emit("chat", { message: e.target.value, room: this.props.room });
             e.target.value = "";
         }
     }

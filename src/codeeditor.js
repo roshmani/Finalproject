@@ -52,7 +52,10 @@ class CodeEditor extends Component {
     }
     componentDidMount() {
         emit("room", { room: this.props.match.params.id });
-        this.setState({ otherUserId: this.props.match.params.id });
+        this.setState({
+            otherUserId: this.props.match.params.id,
+            room: this.props.match.params.id
+        });
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -67,7 +70,11 @@ class CodeEditor extends Component {
         console.log("code in componentDidUpdate", this.props.code);
         if (this.state.theId) {
             emit("room", { room: this.state.theId });
-            this.setState({ otherUserId: this.state.theId, theId: null });
+            this.setState({
+                otherUserId: this.state.theId,
+                theId: null,
+                room: this.state.theId
+            });
         }
     }
     componentWillUnmount() {
@@ -80,7 +87,7 @@ class CodeEditor extends Component {
         console.log("code in update:", newCode);
         emit("codeUpdate", {
             code: newCode,
-            room: this.props.match.params.id
+            room: this.state.room
         });
     }
 
@@ -88,7 +95,6 @@ class CodeEditor extends Component {
 
     changeMode(e) {
         var mode = e.target.value;
-        console.log("Mode changed", mode);
         this.setState({
             mode: e.target.value,
             code:
@@ -155,7 +161,7 @@ class CodeEditor extends Component {
                 </div>
                 <div className="roomChatdiv">
                     <RoomUsers />
-                    <Chat />
+                    <Chat room={this.state.room} />
                 </div>
             </div>
         );
