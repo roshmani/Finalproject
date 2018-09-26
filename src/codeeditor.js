@@ -34,8 +34,20 @@ import "codemirror/addon/lint/lint.css";
 import { emit } from "./socket";
 import RoomUsers from "./roomusers";
 import Chat from "./chat";
+import SaveButton from "./savebutton";
 /***********************************************************************************************************/
 let editor;
+const fileExtensionDict = {
+    javascript: "js",
+    ruby: "rb",
+    swift: "SWIFT",
+    clojure: "clj",
+    python: "py",
+    php: "php",
+    erlang: "erl",
+    coffeescript: "coffee",
+    crystal: "cr"
+};
 class CodeEditor extends Component {
     constructor(props) {
         super(props);
@@ -46,9 +58,11 @@ class CodeEditor extends Component {
             readOnly: false,
             mode: "javascript"
         };
+
         this.updateCode = this.updateCode.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.toggleReadOnly = this.toggleReadOnly.bind(this);
+        this.savefilename = this.savefilename.bind(this);
     }
     componentDidMount() {
         emit("room", { room: this.props.match.params.id });
@@ -67,7 +81,6 @@ class CodeEditor extends Component {
         return null;
     }
     componentDidUpdate() {
-        console.log("code in componentDidUpdate", this.props.code);
         if (this.state.theId) {
             emit("room", { room: this.state.theId });
             this.setState({
@@ -94,12 +107,16 @@ class CodeEditor extends Component {
     updateCurrentlyTyping() {}
 
     changeMode(e) {
-        var mode = e.target.value;
         this.setState({
             mode: e.target.value,
             code:
                 "/*Start Programming---Please change comment to required syntax*/"
         });
+    }
+    savefilename(e) {
+        let filename =
+            e.target.value + "." + fileExtensionDict[this.state.mode];
+        this.setState({ filename: filename });
     }
     toggleReadOnly() {
         this.setState(
@@ -153,10 +170,25 @@ class CodeEditor extends Component {
                             <option value="python">Python</option>
                             <option value="swift">Swift</option>
                         </select>
-                        <button onClick={this.toggleReadOnly}>
-                            Toggle read-only mode (currently{" "}
-                            {this.state.readOnly ? "on" : "off"})
-                        </button>
+                        <div>
+                            <button
+                                className="readonly"
+                                onClick={this.toggleReadOnly}
+                            >
+                                Toggle read-only mode (currently{" "}
+                                {this.state.readOnly ? "on" : "off"})
+                            </button>
+                            <input
+                                type="text"
+                                id="filename"
+                                onChange={this.savefilename}
+                                placeholder="enter file name to save"
+                            />
+                            <SaveButton
+                                code={this.props.code}
+                                filename={this.state.filename}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="roomChatdiv">

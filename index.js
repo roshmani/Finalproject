@@ -142,6 +142,23 @@ app.post("/login", (req, res) => {
         res.json({ success: false });
     }
 });
+
+/***********************************************************************************************************/
+
+app.get("/savecode", (req, res) => {
+    if (req.query.filename) {
+        res.set(
+            "Content-disposition",
+            "attachment; filename=" + req.query.filename
+        );
+    }
+    if (req.query.code) {
+        res.setHeader("content-type", "plain/text");
+        res.send(req.query.code);
+    } else {
+        res.json({ success: false });
+    }
+});
 /***********************************************************************************************************/
 app.get("*", function(req, res) {
     res.sendFile(__dirname + "/index.html");
