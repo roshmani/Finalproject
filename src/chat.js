@@ -35,14 +35,18 @@ class Chat extends Component {
                 className="chatMessages"
                 ref={element => (this.element = element)}
             >
-                Chat Messages
+                <h3 onClick={this.props.toggleChat} className="chatheader">
+                    Chat Messages
+                </h3>
                 {this.props.messages.map(message => (
                     <div className="chats" key={message.chatid}>
                         <div className="userprof">
-                            {message.fname} {message.lname}
+                            <p>
+                                {message.fname} {message.lname}
+                            </p>
+                            <p>{message.send_at}</p>
                         </div>
                         <div className="chat">
-                            <p>{message.send_at}</p>
                             <p>{message.message}</p>
                         </div>
                     </div>

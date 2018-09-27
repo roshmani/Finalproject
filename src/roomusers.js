@@ -15,7 +15,7 @@ class RoomUsers extends Component {
         return (
             <div className="userwrapper">
                 <div className="users">
-                    <h3>Users Coding Together</h3>
+                    <h3>Current Coders</h3>
                     {this.props.users.map(user => (
                         <div className="roomuser" key={user.id}>
                             {user.fname} {user.lname}

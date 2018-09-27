@@ -37,7 +37,7 @@ module.exports.getRecentMessages = function(room_id) {
     ON (sender_id = users.id)
     WHERE room_id=$1
     ORDER BY chatid DESC
-    LIMIT 5`;
+    LIMIT 3`;
     return db.query(query, [room_id || null]);
 };
 

@@ -309,12 +309,47 @@ main {
     justify-content: flex-start;
 }
 .codemirrordiv {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 30px;
     max-width: 720px;
     padding: 1em;
 }
 
 .ReactCodeMirror {
     border: 1px solid #ccc;
+}
+.react-codemirror2 {
+    height: 800px;
+    width: 600px;
+}
+.CodeMirror {
+    height: 100% !important;
+}
+/*********************************************************************************/
+
+.chat {
+    position: relative;
+    background: #dadada;
+    border-radius: 0.4em;
+    height: 50px;
+}
+
+.chat:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-bottom-color: #dadada;
+    border-top: 0;
+    border-left: 0;
+    margin-left: -10px;
+    margin-top: -20px;
+}
+
+.chatmsg {
+    margin-top: 20px;
+    width: 400px;
+    height: 50px;
 }
