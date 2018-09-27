@@ -34,18 +34,20 @@ export default class App extends React.Component {
         const { fname, lname, id } = this.state;
         return (
             <BrowserRouter>
-                <div>
+                <div className="appwrapper">
                     <div className="mainAppdiv">
-                        <div className="headerdiv">
-                            <div className="logodiv">
-                                <h1 className="logoimg">Code Together</h1>
+                        <div className="headerappdiv">
+                            <div className="logobrand">
+                                <h1 className="logotxt">
+                                    &lt;Code Together/&gt;
+                                </h1>
                             </div>
+                            <Navigation />
                             <div className="userloggeddiv">
                                 <span className="userlogged">
                                     {fname} {lname}
                                 </span>
                             </div>
-                            <Navigation />
                         </div>
                         <div className="codesharewrapper">
                             <Route

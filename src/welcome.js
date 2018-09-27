@@ -9,7 +9,7 @@ export default function Welcome() {
     return (
         <HashRouter>
             <div className="landingpagediv">
-                <div className="headerbtndiv">
+                <div className="headerdiv">
                     <div className="logobrand">
                         <h1 className="logotxt">&lt;Code Together/&gt;</h1>
                     </div>

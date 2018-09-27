@@ -23,7 +23,7 @@ export default class Login extends React.Component {
                         Email-id or password input seems to be wrong!!
                     </div>
                 )}
-                <h2 className="titletxt">LOGIN</h2>
+                <h2 className="titletxt">SIGN IN</h2>
                 <input
                     type="email"
                     name="emailid"
@@ -41,7 +41,7 @@ export default class Login extends React.Component {
                     className="loginButton"
                     onClick={this.login}
                 >
-                    Log In
+                    Sign In
                 </button>
                 <p>
                     Not Registered yet?..,<Link to="/register">Register</Link>
