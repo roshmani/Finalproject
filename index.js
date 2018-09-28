@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 const compression = require("compression");
 const server = require("http").Server(app);
-const io = require("socket.io")(server, { origins: "localhost:8080" });
+const io = require("socket.io")(server, {
+    origins: "localhost:8080 codecube.herokuapp.com:*"
+});
 const { hashPass, checkPass } = require("./PwdEncryption");
 const {
     regUsers,
@@ -164,7 +166,7 @@ app.get("*", function(req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
-server.listen(8080, function() {
+server.listen(process.env.PORT || 8080, function() {
     console.log("I'm listening.");
 });
 

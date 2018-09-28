@@ -1,6 +1,12 @@
 var spicedpg = require("spiced-pg");
-const secrets = require("./secrets.json");
-const dbURL = secrets.dbURL;
+
+let dbURL;
+if (process.env.DATABASE_URL) {
+    dbURL = process.env.DATABASE_URL;
+} else {
+    const secrets = require("./secrets.json");
+    dbURL = secrets.dbURL;
+}
 const db = spicedpg(dbURL);
 
 module.exports.regUsers = function(fname, lname, email, password) {
