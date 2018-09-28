@@ -17,12 +17,18 @@ const {
     getCode
 } = require("./codetogetherdb");
 app.use(compression());
-const { secret } = require("./secrets.json");
 const csurf = require("csurf");
 const cookieSession = require("cookie-session");
 app.use(require("cookie-parser")());
 /*config:body parser*/
 app.use(require("body-parser").json());
+let secret;
+if (process.env.secret) {
+    secret = process.env.secret;
+} else {
+    const secrets = require("./secrets.json");
+    secret = secrets.secret;
+}
 const cookieSessionMiddleware = cookieSession({
     secret: secret,
     maxAge: 1000 * 60 * 60 * 24 * 14
