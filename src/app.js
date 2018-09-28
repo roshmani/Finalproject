@@ -38,7 +38,9 @@ export default class App extends React.Component {
                     <div className="mainAppdiv">
                         <div className="headerappdiv">
                             <div className="logobrand">
-                                <h1 className="logotxt">&lt;Code Cube/&gt;</h1>
+                                <h1 className="logotxt">
+                                    &#91; Code Cube &#93;
+                                </h1>
                             </div>
                             <Navigation />
                             <div className="userloggeddiv">

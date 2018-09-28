@@ -13,7 +13,7 @@ export default class CodeShare extends React.Component {
         return (
             <div className="codeShareMain">
                 <Link to={`/sharecode/${this.props.id}`}>
-                    <h2 className="roomnav">Go to Coding Room</h2>
+                    <h2 className="roomnav">Go to Coding Cube</h2>
                 </Link>
             </div>
         );

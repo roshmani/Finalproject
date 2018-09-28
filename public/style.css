@@ -16,6 +16,7 @@ body {
     text-align: center;
     align-self: flex-end;
     width: 100px;
+    margin-right: 20px;
 }
 .signinbtndiv a,
 .signupbtndiv a {
@@ -80,7 +81,7 @@ main {
     border-radius: 25%;
     width: 600px;
     height: 250px;
-    margin-top: 20%;
+    margin-top: 15%;
     text-align: center;
     color: white;
 }
@@ -281,15 +282,15 @@ main {
 .codeShareMain {
     text-align: center;
     width: 300px;
-    margin-top: 20%;
+    margin-top: 15%;
     margin-left: 40%;
-    line-height: 3;
     font-size: 18px;
 }
 
 .codeShareMain a {
     padding: 10px;
     text-decoration: none;
+    line-height: 2;
     color: white;
 }
 
@@ -302,6 +303,9 @@ main {
 .roomnav:hover {
     background-color: white;
     color: black;
+}
+.modesel {
+    line-height: 50px;
 }
 /*****************************************************************************/
 .codeRoom {

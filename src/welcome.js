@@ -11,7 +11,7 @@ export default function Welcome() {
             <div className="landingpagediv">
                 <div className="headerdiv">
                     <div className="logobrand">
-                        <h1 className="logotxt">&lt;Code Cube/&gt;</h1>
+                        <h1 className="logotxt">&#91;Code Cube &#93;</h1>
                     </div>
                     <div className="signinbtndiv">
                         <Link to="/login">

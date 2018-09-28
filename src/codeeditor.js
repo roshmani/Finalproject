@@ -158,6 +158,7 @@ class CodeEditor extends Component {
 
                     <div style={{ marginTop: 10 }}>
                         <select
+                            className="modesel"
                             onChange={this.changeMode}
                             value={this.state.mode}
                         >
@@ -171,25 +172,25 @@ class CodeEditor extends Component {
                             <option value="python">Python</option>
                             <option value="swift">Swift</option>
                         </select>
-                        <div>
-                            <button
-                                className="readonly"
-                                onClick={this.toggleReadOnly}
-                            >
-                                Toggle read-only mode (currently{" "}
-                                {this.state.readOnly ? "on" : "off"})
-                            </button>
-                            <input
-                                type="text"
-                                id="filename"
-                                onChange={this.savefilename}
-                                placeholder="enter file name to save"
-                            />
-                            <SaveButton
-                                code={this.props.code}
-                                filename={this.state.filename}
-                            />
-                        </div>
+                        <button
+                            className="readonly"
+                            onClick={this.toggleReadOnly}
+                        >
+                            Toggle read-only mode (currently{" "}
+                            {this.state.readOnly ? "on" : "off"})
+                        </button>
+                    </div>
+                    <div className="savediv">
+                        <input
+                            type="text"
+                            id="filename"
+                            onChange={this.savefilename}
+                            placeholder="enter file name to save"
+                        />
+                        <SaveButton
+                            code={this.props.code}
+                            filename={this.state.filename}
+                        />
                     </div>
                 </div>
                 <div className="roomChatdiv">
