@@ -17,10 +17,12 @@ export function getSocket(store) {
         });
 
         socket.on("userJoined", data => {
+            console.log("user joined");
             store.dispatch(userJoined(data));
         });
 
         socket.on("userLeft", leftUserId => {
+            console.log("user left");
             store.dispatch(userLeft(leftUserId));
         });
         socket.on("updateCode", code => {

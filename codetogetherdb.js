@@ -53,6 +53,7 @@ module.exports.saveChatMsg = function(senderid, message, room_id) {
 };
 
 module.exports.getCode = function(coder_id) {
+    console.log("coder_id:", coder_id);
     const query = `SELECT *
     FROM codestore
     WHERE coder_id=$1`;

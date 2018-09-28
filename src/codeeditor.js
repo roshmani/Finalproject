@@ -91,6 +91,7 @@ class CodeEditor extends Component {
         }
     }
     componentWillUnmount() {
+        console.log("user left", this.props.match.params.id);
         emit("leaveRoom", {
             room: this.props.match.params.id
         });

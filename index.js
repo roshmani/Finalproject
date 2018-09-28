@@ -290,10 +290,17 @@ io.on("connection", function(socket) {
     socket.on("leaveRoom", data => {
         delete roomUsers[socket.id];
         //check if the users are in  object.values(userid ) then emit
+        console.log("user id:", userId);
         if (!Object.values(roomUsers).includes(userId)) {
             io.to(data.room).emit("userLeft", userId);
         }
     });
 
-    socket.on("disconnect", () => {});
+    socket.on("disconnect", () => {
+        delete onlineUsers[socket.id];
+        //check if the users are in  object.values(userid ) then emit
+        if (!Object.values(onlineUsers).includes(userId)) {
+            socket.broadcast.emit("userLeft", userId);
+        }
+    });
 });

@@ -325,7 +325,21 @@ main {
     height: 100% !important;
 }
 /*********************************************************************************/
-
+.chatMessages,
+.users {
+    border: 1px solid #534d51;
+    -webkit-box-shadow: -5px 6px 5px 0px rgba(36, 33, 36, 1);
+    -moz-box-shadow: -5px 6px 5px 0px rgba(36, 33, 36, 1);
+    box-shadow: -5px 6px 5px 0px rgba(36, 33, 36, 1);
+}
+.chatMessages h3,
+.users h3 {
+    color: white;
+    background-color: gray;
+}
+.chats {
+    margin: 20px;
+}
 .chat {
     position: relative;
     background: #dadada;
