@@ -7,7 +7,9 @@ A pair programming or real time code sharing app , done in React , Redux for fro
 Code Mirror used as code Editor
 
 Socket IO also used for chat.
-
-** To Do ** 
+ 
 mailing the link to share.
+
+TO DO
+******
 Video Chat
