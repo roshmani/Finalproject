@@ -35,6 +35,7 @@ import { emit } from "./socket";
 import RoomUsers from "./roomusers";
 import Chat from "./chat";
 import SaveButton from "./savebutton";
+import ShareUrl from "./email";
 /***********************************************************************************************************/
 let editor;
 const fileExtensionDict = {
@@ -63,6 +64,7 @@ class CodeEditor extends Component {
         this.changeMode = this.changeMode.bind(this);
         this.toggleReadOnly = this.toggleReadOnly.bind(this);
         this.savefilename = this.savefilename.bind(this);
+        this.toggleShareLink = this.toggleShareLink.bind(this);
     }
     componentDidMount() {
         emit("room", { room: this.props.match.params.id });
@@ -127,6 +129,13 @@ class CodeEditor extends Component {
             () => this.editor.focus()
         );
     }
+
+    toggleShareLink() {
+        this.setState({
+            showSharedlg: !this.state.showSharedlg
+        });
+        console.log("in tog room", this.state.showSharedlg);
+    }
     render() {
         let options = {
             lineNumbers: true,
@@ -143,6 +152,14 @@ class CodeEditor extends Component {
         }*/
         return (
             <div className="codeRoom">
+                <div className="codeshareBtn">
+                    <button
+                        onClick={this.toggleShareLink}
+                        className="shareUrlBtn"
+                    >
+                        Share Url
+                    </button>
+                </div>
                 <div className="codemirrordiv">
                     <CodeMirror
                         ref={e => (editor = e)}
@@ -197,6 +214,9 @@ class CodeEditor extends Component {
                     <RoomUsers />
                     <Chat room={this.state.room} />
                 </div>
+                {this.state.showSharedlg && (
+                    <ShareUrl onClick={this.toggleShareLink} />
+                )}
             </div>
         );
     }

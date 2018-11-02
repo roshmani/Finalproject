@@ -1,3 +1,4 @@
+const nodeMailer = require("nodemailer");
 const express = require("express");
 const app = express();
 const compression = require("compression");
@@ -22,13 +23,29 @@ const cookieSession = require("cookie-session");
 app.use(require("cookie-parser")());
 /*config:body parser*/
 app.use(require("body-parser").json());
-let secret;
+
+let secret, authmail, authpsw;
 if (process.env.secret) {
     secret = process.env.secret;
 } else {
     const secrets = require("./secrets.json");
     secret = secrets.secret;
 }
+
+if (process.env.authmail) {
+    authmail = process.env.authmail;
+} else {
+    const secrets = require("./secrets.json");
+    authmail = secrets.authmail;
+}
+
+if (process.env.authpsw) {
+    authpsw = process.env.authpsw;
+} else {
+    const secrets = require("./secrets.json");
+    authpsw = secrets.authpsw;
+}
+
 const cookieSessionMiddleware = cookieSession({
     secret: secret,
     maxAge: 1000 * 60 * 60 * 24 * 14
@@ -166,6 +183,48 @@ app.get("/savecode", (req, res) => {
     } else {
         res.json({ success: false });
     }
+});
+
+/***********************************************************************************************************/
+app.post("/sendMail", function(req, res) {
+    let transporter = nodeMailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: authmail,
+            pass: authpsw
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+    transporter.verify((error, success) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Server is ready to take messages");
+        }
+    });
+
+    let mailOptions = {
+        from: req.session.user + "<" + req.session.emailid + ">", // sender address
+        to: req.body.emailid, // list of receivers
+        subject: "Invitation to Code Cube-Code together with me", // Subject line
+        text: "Please click on the link after Logging in:" + req.body.sharedUrl,
+        html:
+            "<b>Please click on the link after Logging in Code Cube:</b>" +
+            req.body.sharedUrl // html body
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            res.json({ error: true });
+        } else {
+            //console.log("Message %s sent: %s", info.messageId, info.response);
+            res.json({ success: true });
+        }
+    });
 });
 /***********************************************************************************************************/
 app.get("*", function(req, res) {
