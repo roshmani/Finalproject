@@ -74,12 +74,12 @@ app.use(express.static("./public"));
 
 app.get("/logout", function(request, response) {
     request.session = null;
-    response.redirect("/welcome");
+    response.redirect("/");
 });
 
 app.get("/Welcome", function(req, res) {
     if (req.session.userId) {
-        return res.redirect("/");
+        return res.redirect("/codecube");
     }
     res.sendFile(__dirname + "/index.html");
 });
@@ -120,6 +120,7 @@ app.post("/register", (req, res) => {
             })
             .then(function(results) {
                 req.session.userId = results.rows[0].id;
+                req.session.emailId = results.rows[0].email;
                 req.session.user =
                     results.rows[0].fname + "" + results.rows[0].lname;
                 res.json({ success: true });
@@ -134,7 +135,7 @@ app.post("/register", (req, res) => {
 });
 /******************************Login*******************************************************/
 app.post("/login", (req, res) => {
-    let idval, fname, lname;
+    let idval, fname, lname, user, emailId;
     if (req.body.emailid && req.body.password) {
         checkEmail(req.body.emailid)
             .then(function(results) {
@@ -142,6 +143,8 @@ app.post("/login", (req, res) => {
                     idval = results.rows[0].id;
                     fname = results.rows[0].fname;
                     lname = results.rows[0].lname;
+                    user = fname + " " + lname;
+                    emailId = req.body.emailid;
                     return checkPass(
                         req.body.password,
                         results.rows[0].password
@@ -153,7 +156,9 @@ app.post("/login", (req, res) => {
             .then(function(match) {
                 if (match) {
                     req.session.userId = idval;
-                    req.session.user = fname + " " + lname;
+                    req.session.emailid = emailId;
+                    req.session.fname = fname;
+                    req.session.user = user;
                     res.json({ success: true, username: fname });
                 } else {
                     throw new Error();

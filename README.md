@@ -1,6 +1,10 @@
 # Finalproject
 
+<<<<<<< HEAD
 Final Project at Full Stack Web development Course ** Code Cube ** https://codecube.herokuapp.com/
+=======
+Final Project at Full Stack Web development Course ** Code Cube ** www.codecube.herokuapp.com/
+>>>>>>> small modifications to change home route to /
 
 A pair programming or real time code sharing app , done in React , Redux for front end, Node js , Postgresql as back end. Socket.IO for communicstion
 
