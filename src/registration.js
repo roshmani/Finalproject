@@ -79,7 +79,7 @@ export default class Registration extends React.Component {
             .then(({ data }) => {
                 if (data.success) {
                     this.setState({ logged: true });
-                    location.replace("/codecube");
+                    location.replace("/");
                 } else {
                     this.setState({ error: true });
                 }

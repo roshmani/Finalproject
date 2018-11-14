@@ -17,7 +17,7 @@ const store = createStore(
     reducer,
     composeWithDevTools(applyMiddleware(reduxPromise))
 );
-if (location.pathname == "/") {
+if (location.pathname == "/welcome") {
     elem = <Welcome />;
 } else {
     elem = (getSocket(store),
