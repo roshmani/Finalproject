@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const compression = require("compression");
 const server = require("http").Server(app);
-/* added a comment to test deploy*/
 const io = require("socket.io")(server, {
     origins: "localhost:8080 codecube.herokuapp.com:*"
 });
