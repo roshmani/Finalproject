@@ -77,7 +77,7 @@ app.get("/logout", function(request, response) {
     response.redirect("/");
 });
 
-app.get("/Welcome", function(req, res) {
+app.get("/", function(req, res) {
     if (req.session.userId) {
         return res.redirect("/codecube");
     }
