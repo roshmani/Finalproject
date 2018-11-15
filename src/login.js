@@ -63,7 +63,7 @@ export default class Login extends React.Component {
             .then(({ data }) => {
                 if (data.success) {
                     this.setState({ fname: data.username, logged: true });
-                    location.replace("/");
+                    location.replace("/codecube");
                 } else {
                     this.setState({ error: true });
                 }
